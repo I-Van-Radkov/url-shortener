@@ -9,14 +9,14 @@ import (
 
 type InMemoryRepository struct {
 	mu            sync.RWMutex
-	byShortCode   map[string]*model.URL
-	byOriginalUrl map[string]*model.URL
+	byShortCode   map[string]model.URL
+	byOriginalURL map[string]model.URL
 }
 
 func New() *InMemoryRepository {
 	return &InMemoryRepository{
-		byShortCode:   make(map[string]*model.URL),
-		byOriginalUrl: make(map[string]*model.URL),
+		byShortCode:   make(map[string]model.URL),
+		byOriginalURL: make(map[string]model.URL),
 	}
 }
 
@@ -24,8 +24,8 @@ func (r *InMemoryRepository) FindByOriginalURL(ctx context.Context, originalURL 
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	if url, exists := r.byOriginalUrl[originalURL]; exists {
-		return url, nil
+	if url, exists := r.byOriginalURL[originalURL]; exists {
+		return url.Clone(), nil
 	}
 
 	return nil, model.ErrURLNotFound
@@ -36,7 +36,7 @@ func (r *InMemoryRepository) FindByShortCode(ctx context.Context, shortCode stri
 	defer r.mu.RUnlock()
 
 	if url, exists := r.byShortCode[shortCode]; exists {
-		return url, nil
+		return url.Clone(), nil
 	}
 
 	return nil, model.ErrURLNotFound
@@ -46,7 +46,11 @@ func (r *InMemoryRepository) Save(ctx context.Context, url *model.URL) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.byOriginalUrl[url.Original]; exists {
+	if url == nil {
+		return model.ErrInvalidOriginalURL
+	}
+
+	if _, exists := r.byOriginalURL[url.Original]; exists {
 		return model.ErrOriginalURLExists
 	}
 
@@ -54,8 +58,9 @@ func (r *InMemoryRepository) Save(ctx context.Context, url *model.URL) error {
 		return model.ErrShortCodeExists
 	}
 
-	r.byOriginalUrl[url.Original] = url
-	r.byShortCode[url.ShortCode] = url
+	stored := *url
+	r.byOriginalURL[url.Original] = stored
+	r.byShortCode[url.ShortCode] = stored
 
 	return nil
 }
