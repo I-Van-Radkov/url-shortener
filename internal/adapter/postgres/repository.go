@@ -43,7 +43,10 @@ func (r *PostgresRepository) CreateOrFind(ctx context.Context, urlInput *model.U
 
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-		return nil, model.ErrShortCodeExists
+		switch pgErr.ConstraintName {
+		case "urls_short_code_key":
+			return nil, model.ErrShortCodeExists
+		}
 	}
 
 	return nil, fmt.Errorf("failed to create or find: %w", err)
