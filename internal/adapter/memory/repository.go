@@ -32,10 +32,11 @@ func (r *InMemoryRepository) CreateOrFind(ctx context.Context, urlInput *model.U
 		return nil, model.ErrShortCodeExists
 	}
 
-	r.byShortCode[urlInput.ShortCode] = *urlInput
-	r.byOriginalURL[urlInput.Original] = *urlInput
+	url := *urlInput
+	r.byShortCode[urlInput.ShortCode] = url
+	r.byOriginalURL[urlInput.Original] = url
 
-	return urlInput, nil
+	return &url, nil
 }
 
 func (r *InMemoryRepository) FindByShortCode(ctx context.Context, shortCode string) (*model.URL, error) {
