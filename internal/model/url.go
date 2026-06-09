@@ -6,6 +6,7 @@ import (
 
 const (
 	ShortCodeLength = 10
+	Charset         = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 )
 
 type URL struct {

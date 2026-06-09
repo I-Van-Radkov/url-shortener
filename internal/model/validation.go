@@ -7,7 +7,8 @@ import (
 )
 
 func ValidateOriginalURL(raw string) error {
-	if strings.TrimSpace(raw) == "" {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
 		return ErrEmptyOriginalURL
 	}
 
