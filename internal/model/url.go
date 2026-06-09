@@ -6,8 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-const ShortCodeLength = 10
-
 type URL struct {
 	ID        uuid.UUID `json:"id"`
 	Original  string    `json:"original"`
