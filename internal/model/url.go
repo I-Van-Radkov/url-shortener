@@ -9,8 +9,3 @@ type URL struct {
 	Original  string    `json:"original"`
 	CreatedAt time.Time `json:"created_at"`
 }
-
-func (u URL) Clone() *URL {
-	copied := u
-	return &copied
-}
