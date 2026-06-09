@@ -11,4 +11,5 @@ var (
 	ErrInvalidShortCodeLength = errors.New("short code must be exactly 10 characters")
 	ErrGenerationFailed       = errors.New("failed to generate unique short code")
 	ErrInvalidStorageType     = errors.New("invalid storage type")
+	ErrInvalidShortCode       = errors.New("short code contains invalid characters")
 )
