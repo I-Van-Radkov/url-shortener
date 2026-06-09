@@ -25,7 +25,7 @@ func New(config PostgresConfig) (*Database, error) {
 
 	pool, err := pgxpool.New(context.Background(), dataSource)
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to db after retries: %w", err)
+		return nil, fmt.Errorf("failed to connect to db: %w", err)
 	}
 
 	err = pool.Ping(context.Background())
