@@ -16,6 +16,9 @@ type PostgresConfig struct {
 }
 
 type Config struct {
+	Env      string `env:"ENV" env-default:"dev"`
+	LogLevel string `env:"LOG_LEVEL" env-default:"debug"`
+
 	GracefulShutdownTimeout time.Duration `env:"GRACEFUL_SHUTDOWN_TIMEOUT" env-default:"5s"`
 	StorageType             string        `env:"STORAGE_TYPE" env-default:"memory"`
 	MaxAttemptsToGen        int           `env:"MAX_ATTEMPTS_TO_GEN" env-default:"5"`
@@ -42,6 +45,15 @@ func (c *Config) Validate() error {
 
 	if c.GracefulShutdownTimeout < 1*time.Second {
 		return fmt.Errorf("GRACEFUL_SHUTDOWN_TIMEOUT must be at least 1s, got %v", c.GracefulShutdownTimeout)
+	}
+
+	if c.Env != "dev" && c.Env != "prod" {
+		return fmt.Errorf("invalid ENV: %s", c.Env)
+	}
+
+	if c.LogLevel != "debug" && c.LogLevel != "info" &&
+		c.LogLevel != "warn" && c.LogLevel != "error" {
+		return fmt.Errorf("invalid LOG_LEVEL: %s", c.LogLevel)
 	}
 
 	return nil
