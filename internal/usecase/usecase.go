@@ -24,7 +24,7 @@ type Usecase struct {
 	maxAttemptsToGen int
 }
 
-func New(repo Repository, gen Generator, maxAttemptsToGen int) *Usecase {
+func NewUsecase(repo Repository, gen Generator, maxAttemptsToGen int) *Usecase {
 	if maxAttemptsToGen <= 0 {
 		maxAttemptsToGen = 5
 	}
