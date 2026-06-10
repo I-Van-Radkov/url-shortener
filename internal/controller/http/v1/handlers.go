@@ -39,7 +39,7 @@ func (h *HandlerFacade) CreateShortURL(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, createShortURLResponse{
-		ShortURL: url.ShortCode,
+		ShortURL: buildShortURL(c, url.ShortCode),
 	})
 }
 
