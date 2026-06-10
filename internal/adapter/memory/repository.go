@@ -2,6 +2,7 @@ package memory
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/I-Van-Radkov/url-shortener/internal/model"
@@ -21,6 +22,10 @@ func NewRepo() *InMemoryRepository {
 }
 
 func (r *InMemoryRepository) CreateOrFind(ctx context.Context, urlInput *model.URL) (*model.URL, error) {
+	if urlInput == nil {
+		return nil, fmt.Errorf("url input is nil")
+	}
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

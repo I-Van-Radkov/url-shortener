@@ -25,6 +25,10 @@ func NewRepo(db *pgxpool.Pool) *PostgresRepository {
 }
 
 func (r *PostgresRepository) CreateOrFind(ctx context.Context, urlInput *model.URL) (*model.URL, error) {
+	if urlInput == nil {
+		return nil, fmt.Errorf("url input is nil")
+	}
+
 	query := `
         INSERT INTO urls (short_code, original, created_at)
         VALUES ($1, $2, $3)
