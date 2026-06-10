@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 const (
@@ -10,6 +12,7 @@ const (
 )
 
 type URL struct {
+	ID        uuid.UUID `json:"id"`
 	ShortCode string    `json:"short_code"`
 	Original  string    `json:"original"`
 	CreatedAt time.Time `json:"created_at"`

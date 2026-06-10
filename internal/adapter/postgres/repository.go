@@ -30,14 +30,14 @@ func (r *PostgresRepository) CreateOrFind(ctx context.Context, urlInput *model.U
 	}
 
 	query := `
-        INSERT INTO urls (short_code, original, created_at)
-        VALUES ($1, $2, $3)
+        INSERT INTO urls (id, short_code, original, created_at)
+        VALUES ($1, $2, $3, $4)
         ON CONFLICT (original) DO NOTHING
-        RETURNING short_code, original, created_at
+        RETURNING id, short_code, original, created_at
     `
 
 	var url model.URL
-	err := r.db.QueryRow(ctx, query, urlInput.ShortCode, urlInput.Original, urlInput.CreatedAt).Scan(&url.ShortCode, &url.Original, &url.CreatedAt)
+	err := r.db.QueryRow(ctx, query, urlInput.ID, urlInput.ShortCode, urlInput.Original, urlInput.CreatedAt).Scan(&url.ID, &url.ShortCode, &url.Original, &url.CreatedAt)
 	if err == nil {
 		return &url, nil
 	}
@@ -58,7 +58,7 @@ func (r *PostgresRepository) CreateOrFind(ctx context.Context, urlInput *model.U
 
 func (r *PostgresRepository) FindByShortCode(ctx context.Context, shortCode string) (*model.URL, error) {
 	query, args, err := r.builder.
-		Select("short_code", "original", "created_at").
+		Select("id", "short_code", "original", "created_at").
 		From("urls").
 		Where(squirrel.Eq{"short_code": shortCode}).
 		ToSql()
@@ -67,7 +67,7 @@ func (r *PostgresRepository) FindByShortCode(ctx context.Context, shortCode stri
 	}
 
 	var url model.URL
-	err = r.db.QueryRow(ctx, query, args...).Scan(&url.ShortCode, &url.Original, &url.CreatedAt)
+	err = r.db.QueryRow(ctx, query, args...).Scan(&url.ID, &url.ShortCode, &url.Original, &url.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrURLNotFound
 	}
@@ -80,7 +80,7 @@ func (r *PostgresRepository) FindByShortCode(ctx context.Context, shortCode stri
 
 func (r *PostgresRepository) findByOriginalURL(ctx context.Context, originalURL string) (*model.URL, error) {
 	query, args, err := r.builder.
-		Select("short_code", "original", "created_at").
+		Select("id", "short_code", "original", "created_at").
 		From("urls").
 		Where(squirrel.Eq{"original": originalURL}).
 		ToSql()
@@ -89,7 +89,7 @@ func (r *PostgresRepository) findByOriginalURL(ctx context.Context, originalURL 
 	}
 
 	var url model.URL
-	err = r.db.QueryRow(ctx, query, args...).Scan(&url.ShortCode, &url.Original, &url.CreatedAt)
+	err = r.db.QueryRow(ctx, query, args...).Scan(&url.ID, &url.ShortCode, &url.Original, &url.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrURLNotFound
 	}

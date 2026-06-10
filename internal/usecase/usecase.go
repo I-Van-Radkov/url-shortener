@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/I-Van-Radkov/url-shortener/internal/model"
+	"github.com/google/uuid"
 )
 
 type Repository interface {
@@ -51,6 +52,7 @@ func (u *Usecase) SaveOriginalURL(ctx context.Context, originalURL string) (*mod
 		}
 
 		url := &model.URL{
+			ID:        uuid.New(),
 			ShortCode: code,
 			Original:  originalURL,
 			CreatedAt: now,
