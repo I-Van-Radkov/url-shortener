@@ -1,25 +1,18 @@
-package postgres
+package db
 
 import (
 	"context"
 	"fmt"
 
+	"github.com/I-Van-Radkov/url-shortener/internal/config"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
-
-type PostgresConfig struct {
-	Username string `env:"POSTGRES_USER" env-default:"postgres"`
-	Password string `env:"POSTGRES_PASSWORD" env-default:"postgres"`
-	Host     string `env:"POSTGRES_HOST" env-default:"db"`
-	Port     string `env:"POSTGRES_PORT" env-default:"5432"`
-	DbName   string `env:"POSTGRES_DB" env-default:"postgres"`
-}
 
 type Database struct {
 	Pool *pgxpool.Pool
 }
 
-func New(config PostgresConfig) (*Database, error) {
+func NewPostgres(config config.PostgresConfig) (*Database, error) {
 	dataSource := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
 		config.Username, config.Password, config.Host, config.Port, config.DbName)
 
