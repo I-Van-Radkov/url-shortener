@@ -21,7 +21,7 @@ func ValidateOriginalURL(raw string) error {
 		return ErrInvalidOriginalURL
 	}
 
-	if parsed.Host == "" {
+	if parsed.Hostname() == "" {
 		return ErrInvalidOriginalURL
 	}
 
