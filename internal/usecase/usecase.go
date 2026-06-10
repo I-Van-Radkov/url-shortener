@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/I-Van-Radkov/url-shortener/internal/model"
@@ -38,6 +39,8 @@ func NewUsecase(repo Repository, gen Generator, maxAttemptsToGen int) *Usecase {
 }
 
 func (u *Usecase) SaveOriginalURL(ctx context.Context, originalURL string) (*model.URL, error) {
+	originalURL = strings.TrimSpace(originalURL)
+
 	err := model.ValidateOriginalURL(originalURL)
 	if err != nil {
 		return nil, err

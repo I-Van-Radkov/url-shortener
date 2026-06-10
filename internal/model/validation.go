@@ -2,12 +2,10 @@ package model
 
 import (
 	"net/url"
-	"strings"
 	"unicode/utf8"
 )
 
 func ValidateOriginalURL(raw string) error {
-	raw = strings.TrimSpace(raw)
 	if raw == "" {
 		return ErrEmptyOriginalURL
 	}
