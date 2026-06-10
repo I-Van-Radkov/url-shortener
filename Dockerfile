@@ -1,0 +1,27 @@
+FROM golang:1.25-alpine AS builder
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/url-shortener ./cmd/url-shortener
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/migrate ./cmd/migrate
+
+FROM alpine:3.22
+
+WORKDIR /app
+
+RUN addgroup -S app && adduser -S app -G app
+
+COPY --from=builder /out/url-shortener /app/url-shortener
+COPY --from=builder /out/migrate /app/migrate
+COPY --from=builder /app/migrations /app/migrations
+
+USER app
+
+EXPOSE 8080
+
+CMD ["/app/url-shortener"]
